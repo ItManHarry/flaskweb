@@ -1,9 +1,21 @@
-from flask import Flask
+from flask import Flask,request
 
 app = Flask(__name__)
 
 @app.route('/hello')
 def hello():
+    print('Referrer : ', request.referrer,
+          ', \nScheme : ', request.scheme,
+          ', \nIs JSON : ', request.is_json,
+          ', \nArguments : ', request.args,
+          ',\nBlue Print : ', request.blueprint,
+          ',\nCookies : ', request.cookies,
+          ',\nData : ', request.data,
+          ',\nEnd Point : ', request.endpoint,
+          ',\nFiles : ', request.files,
+          ',\nForm : ', request.form,
+          ',\nValues : ', request.values,
+          ',\nHeaders : ', request.headers)
     return '<h1>Hello flask .</h1>'
 
 '''
@@ -14,6 +26,23 @@ def hello():
 @app.route('/greet')
 @app.route('/greet/<name>')
 def greet(name='Programmer'):
+    print('Referrer : ', request.referrer,
+          ', \nScheme : ', request.scheme,
+          ', \nIs JSON : ', request.is_json,
+          ', \nArguments : ', request.args,
+          ',\nBlue Print : ', request.blueprint,
+          ',\nCookies : ', request.cookies,
+          ',\nData : ', request.data,
+          ',\nEnd Point : ', request.endpoint,
+          ',\nFiles : ', request.files,
+          ',\nForm : ', request.form,
+          ',\nValues : ', request.values,
+          ',\nHeaders : ', request.headers)
+    if request.args:
+        for k,v in request.args.items():
+            print('Key is : ', k, ', value is : ', v)
+    else:
+        print('Arguments is empty !!!')
     return '<h1>Hello , %s !</h1>' %name
 
 if __name__ == '__main__':
