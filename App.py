@@ -1,4 +1,5 @@
 from flask import Flask,request,make_response,jsonify,redirect,url_for,session,g
+from urllib.parse import urlparse,urljoin
 import json
 import os
 app = Flask(__name__)
@@ -202,5 +203,50 @@ def logout():
     if 'logged_in' in session:
         session.pop('logged_in')
     return redirect(url_for('hello'))
+
+#重定向回到上一个页面
+@app.route('/foo')
+def foo():
+    return '''
+        <h1>Foo Page</h1>
+        <a href = "%s">Get Back 1</a>&nbsp;&nbsp;
+        <a href = "%s">Get Back 2</a>&nbsp;&nbsp;
+        <a href = "%s">Get Back 3</a>&nbsp;&nbsp;
+    ''' % (url_for('get_back1'), url_for('get_back2', next=request.full_path), url_for('get_back_for_all'))
+@app.route('/bar')
+def bar():
+    return '''
+           <h1>Bar Page</h1>
+           <a href = "%s">Get Back 1</a>&nbsp;&nbsp;
+           <a href = "%s">Get Back 2</a>&nbsp;&nbsp;
+           <a href = "%s">Get Back 3</a>&nbsp;&nbsp;
+    ''' % (url_for('get_back1'),url_for('get_back2', next=request.full_path), url_for('get_back_for_all',next='http://www.baidu.com'))
+#URL地址安全验证 - 确认是否属于程序内部
+def is_safe_url(target):
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ('http','https') and ref_url.netloc == test_url.netloc
+#实现方式一：使用请求对象的referrer属性获取上一个url地址
+@app.route('/get_back1')
+def get_back1():
+    #do something
+    return redirect(request.referrer or url_for('hello'))
+#实现方式二：手动获取url，使用next参数进行传递
+@app.route('/get_back2')
+def get_back2():
+    #do something
+    return redirect(request.args.get('next', url_for('hello')))
+#通用返回方法
+def redirect_back(default='hello',**kwargs):
+    target = request.args.get('next')
+    print('Target is : ', target)
+    if target and is_safe_url(target):
+        return redirect(target)
+    return redirect(url_for(default, **kwargs))
+@app.route('/get_back_for_all')
+def get_back_for_all():
+    #do something
+    return redirect_back()
+
 if __name__ == '__main__':
     app.run(port=8080,debug=True)
