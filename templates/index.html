@@ -6,8 +6,10 @@
 </head>
 <body>
     <h1>Flask Web Index Page!!!</h1>
+    {#全局函数#}
+    <h3>{{get_time()}}</h3>
     {# 自定义变量一 #}
-    {% set navigations = [{'name':'Home','url':'index'},{'name':'About','url':'about'},{'name':'WatchList','url':'watchlist'}] %}
+    {% set navigations = [{'name':'Home','url':'index'},{'name':'About','url':'about'},{'name':'WatchList','url':'watchlist'},{'name':'Filters','url':'filters'}] %}
     {% for navigation in navigations %}
         <a href = "{{url_for(navigation.url)}}">{{navigation.name}}</a>&nbsp;&nbsp;|&nbsp;&nbsp;
     {% endfor %}
@@ -34,5 +36,35 @@
     {# 自定义上下文值 #}
     <h2>Parameter name : {{p_name}}</h2>
     <h2>Parameter age : {{p_age}}</h2>
+    <hr>
+    {#
+        全局函数(Jinja2)
+        1. range:和Python 中的range （） 用法相同
+        2. lipsum(n=5,html=True,min=20,max=100):生成随机文本，可以在测试时用来填充页面。默认生成5段HTML文本，每段包含20～100个单词
+        3. dict(**items):和Python 中的diet（） 用法相同
+    #}
+    {% set limit = 5 %}
+    {% for i in range(limit)%}
+        <h3>Index is : {{i}}</h3>
+    {% endfor %}
+    <hr>
+    {% set person = dict(name='Jone',age=25,gender='M',email='jone@google.com') %}
+    {% for key, value in person.items() %}
+        <h3>Key : {{key}}, value : {{value}}</h3>
+    {% endfor %}
+    <hr>
+    <h4>Name : {{person.name}}</h4>
+    <h4>Age : {{person.age}}</h4>
+    <h4>Gender: {{person.gender}}</h4>
+    <h4>Email:{{person.email}}</h4>
+    <hr>
+    <!-- 随机产生五段文字 -->
+    {{ lipsum(n=5,html=True,min=20,max=100)}}
+    <hr>
+    {#
+        全局函数(Flask)
+        1. url_for()
+        2. get_flased_messages()
+    #}
 </body>
 </html>

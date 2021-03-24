@@ -2,6 +2,7 @@ from flask import Flask,request,make_response,jsonify,redirect,url_for,session,g
 from urllib.parse import urlparse,urljoin
 import json
 import os
+import time
 app = Flask(__name__)
 app.secret_key=os.getenv('SECRET_KEY', 'secretkey0001')
 #钩子函数
@@ -21,6 +22,10 @@ def inject_params():
     name = 'Jack'
     age = 25
     return dict(p_name=name,p_age=age)
+#注册全局函数
+@app.template_global()
+def get_time():
+    return 'Now is : %s, Time Zone is : %s' %(time.strftime('%Y年%m月%d日 %H时%M分%S秒'), time.tzname)
 
 @app.route('/hello')
 def hello():
@@ -266,10 +271,6 @@ def about():
 #观影清单
 @app.route('/watchlist')
 def watchlist():
-    user = {
-        'username':'Grey Li',
-        'bio':'A boy who loves movies and music.'
-    }
     movies = [
         {'name': 'My Neighbor Totoro', 'year': '1988'},
         {'name': 'Three Colours trilogy', 'year': '1993'},
@@ -282,7 +283,18 @@ def watchlist():
         {'name': 'Gone Girl', 'year': '2014'},
         {'name': 'CoCo', 'year': '2017'}
     ]
+    user = {
+        'username':'Grey Li',
+        'bio':'A boy who loves movies and music.'
+    }
     return render_template('watchlist.html',user=user,movies=movies)
+#过滤器
+@app.route('/filters')
+def filters():
+    namelist = ['Harry','Jack','Tom','Sam','Jone','Jane']
+    numlist = [12,34,3,5,17,42,100,3,5,17,42,89,98,89]
+    urlstr = 'http://www.baidu.com'
+    return render_template('filters.html',namelist=namelist,numlist=numlist,urlstr=urlstr)
 #启动服务
 if __name__ == '__main__':
     app.run(port=8080,debug=True)
