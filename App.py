@@ -1,4 +1,4 @@
-from flask import Flask,request,make_response,jsonify,redirect,url_for,session,g
+from flask import Flask,request,make_response,jsonify,redirect,url_for,session,g,render_template
 from urllib.parse import urlparse,urljoin
 import json
 import os
@@ -12,7 +12,15 @@ def init():
 @app.before_request
 def reqintercepter():
     g.name = request.args.get('name')
+    session['user'] = g.name
     print('Intercept every request!!!')
+
+#自定义上下文
+@app.context_processor
+def inject_params():
+    name = 'Jack'
+    age = 25
+    return dict(p_name=name,p_age=age)
 
 @app.route('/hello')
 def hello():
@@ -247,6 +255,34 @@ def redirect_back(default='hello',**kwargs):
 def get_back_for_all():
     #do something
     return redirect_back()
-
+#主页
+@app.route('/index')
+def index():
+    return render_template('index.html')
+#关于
+@app.route('/about')
+def about():
+    return render_template('about.html')
+#观影清单
+@app.route('/watchlist')
+def watchlist():
+    user = {
+        'username':'Grey Li',
+        'bio':'A boy who loves movies and music.'
+    }
+    movies = [
+        {'name': 'My Neighbor Totoro', 'year': '1988'},
+        {'name': 'Three Colours trilogy', 'year': '1993'},
+        {'name': 'Forrest Gump', 'year': '1994'},
+        {'name': 'Perfect Blue', 'year': '1997'},
+        {'name': 'The Matrix', 'year': '1999'},
+        {'name': 'Memento', 'year': '2000'},
+        {'name': 'The Bucket list', 'year': '2007'},
+        {'name': 'Black Swan', 'year': '2010'},
+        {'name': 'Gone Girl', 'year': '2014'},
+        {'name': 'CoCo', 'year': '2017'}
+    ]
+    return render_template('watchlist.html',user=user,movies=movies)
+#启动服务
 if __name__ == '__main__':
     app.run(port=8080,debug=True)

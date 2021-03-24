@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flask Web Index Page</title>
+</head>
+<body>
+    <h1>Flask Web Index Page!!!</h1>
+    {# 自定义变量一 #}
+    {% set navigations = [{'name':'Home','url':'index'},{'name':'About','url':'about'},{'name':'WatchList','url':'watchlist'}] %}
+    {% for navigation in navigations %}
+        <a href = "{{url_for(navigation.url)}}">{{navigation.name}}</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+    {% endfor %}
+    <hr>
+    {# 自定义变量二 #}
+    {% set urls %}
+        <li><a href = "/index">Index</a></li>
+        <li><a href = "/about">About</a></li>
+        <li><a href = "/watchlist">WatchList</a></li>
+    {% endset %}
+    <ul>
+        {{urls}}
+    </ul>
+    {#
+        内置上下文变量(同时也是全局变量)
+        1. config:当前的配置对象
+        2. request:当前的请求对象，在已激活的请求环境下可用
+        3. session:当前的会话对象，在己激活的请求环境下可用
+        4. g:与请求绑定的全局变革’，在已激活的请求环境下可用
+    #}
+    <h2>User(request) : {{request.args.get('name')}}</h2>
+    <h2>User(g) : {{g.name}}</h2>
+    <h2>User(session) : {{session.get('user')}}</h2>
+    {# 自定义上下文值 #}
+    <h2>Parameter name : {{p_name}}</h2>
+    <h2>Parameter age : {{p_age}}</h2>
+</body>
+</html>

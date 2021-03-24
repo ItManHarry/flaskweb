@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flask Web About Page</title>
+</head>
+<body>
+    <h1>Flask Web About Page!!!</h1>
+    {% set navigations = [{'name':'Home','url':'index'},{'name':'About','url':'about'}] %}
+    {% for navigation in navigations %}
+        <a href = "{{url_for(navigation.url)}}">{{navigation.name}}</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+    {% endfor %}
+    {# 自定义上下文值 #}
+    <h2>Parameter name : {{p_name}}</h2>
+    <h2>Parameter age : {{p_age}}</h2>
+</body>
+</html>
