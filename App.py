@@ -1,10 +1,14 @@
-from flask import Flask,request,make_response,jsonify,redirect,url_for,session,g,render_template
+from flask import Flask,request,make_response,jsonify,redirect,url_for,session,g,render_template,Markup,flash
 from urllib.parse import urlparse,urljoin
 import json
 import os
 import time
 app = Flask(__name__)
 app.secret_key=os.getenv('SECRET_KEY', 'secretkey0001')
+#自定义错误页面
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('errors/404.html'), 404
 #钩子函数
 @app.before_first_request
 def init():
@@ -27,6 +31,42 @@ def inject_params():
 def get_time():
     return 'Now is : %s, Time Zone is : %s' %(time.strftime('%Y年%m月%d日 %H时%M分%S秒'), time.tzname)
 
+#自定义过滤器
+@app.template_filter()
+def musical(s):
+    return s + ' - ' + Markup('&#9835;')
+
+@app.template_test()
+def baz(n):
+    if n == 'baz':
+        return True
+    return False
+'''
+    模板环境中的全局函数、过滤器和测试器分别存储在Enviroment 对象的globals 、filters 和
+    tests 属性中，这三个属性都是字典对象。除了使用Flask 提供的装饰器和方法注册自定义函数，
+    我们也可以直接操作这三个字典来添加相应的函数或变量，这通过向对应的字典属性中添加一
+    个键值对实现，传人模板的名称作为键，对应的函数对象或变量作为值
+'''
+#添加全局函数&全局变量
+def sayhello():
+    return 'Hello, welcome you !!!'
+globaltitle = 'Global Title'
+app.jinja_env.globals['sayhello'] = sayhello
+app.jinja_env.globals['globaltitle'] = globaltitle
+#添加过滤器
+def smiling(s):
+    return s + '  :)'
+app.jinja_env.filters['smiling'] = smiling
+#添加测试器
+def sam(n):
+    if n == 'Sam':
+        return True
+    return False
+app.jinja_env.tests['sam'] = sam
+#删除Jinja2 语句后的第一个空行
+app.jinja_env.trim_blocks=True
+#删除Jinja2 语句所在行之前的空格和制表符(tabs)
+app.jinja_env.lstrip_blocks=True
 @app.route('/hello')
 def hello():
     name = g.name
@@ -295,6 +335,17 @@ def filters():
     numlist = [12,34,3,5,17,42,100,3,5,17,42,89,98,89]
     urlstr = 'http://www.baidu.com'
     return render_template('filters.html',namelist=namelist,numlist=numlist,urlstr=urlstr)
+
+@app.route('/tests')
+def tests():
+    name = 'Jack'
+    return render_template('tests.html', name=name)
+
+@app.route('/base')
+def base():
+    flash('I am flash , who is looking for me ?')
+    return render_template('base.html')
+
 #启动服务
 if __name__ == '__main__':
     app.run(port=8080,debug=True)

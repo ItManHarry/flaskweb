@@ -1,0 +1,23 @@
+{# ---------------------- 宏Demo ---------------------- #}
+{% macro qux(amount=1) %}
+    {% if amount == 1 %}
+        I am QUX
+    {% elif amount > 1 %}
+        We are QUX
+    {% else %}
+        Not QUX
+    {% endif %}
+{% endmacro%}
+{# ---------------------- 加载静态文件 ---------------------- #}
+{% macro static_file(type, filename_or_url, local=True) %}
+    {% if local %}
+        {% set file_path = url_for('static', filename=filename_or_url) %}
+    {% endif %}
+    {% if type == 'css' %}
+        <link rel = "stylesheet" type = "text/css" href = "{{file_path}}">
+    {% elif type == 'icon' %}
+        <link rel = "icon" type = "image/x-icon" href = "{{file_path}}">
+    {% elif type == 'js' %}
+        <script type = "text/javascript" src = "{{file_path}}"></script>
+    {% endif %}
+{% endmacro %}

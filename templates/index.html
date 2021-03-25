@@ -5,19 +5,26 @@
     <title>Flask Web Index Page</title>
 </head>
 <body>
-    <h1>Flask Web Index Page!!!</h1>
+    <h1>Flask Web Index Page!!!{{sayhello()}} - {{globaltitle|smiling}}</h1>
     {#全局函数#}
     <h3>{{get_time()}}</h3>
+    {# banner导入 include #}
+    {% include 'banner/_banner.html' %}
     {# 自定义变量一 #}
-    {% set navigations = [{'name':'Home','url':'index'},{'name':'About','url':'about'},{'name':'WatchList','url':'watchlist'},{'name':'Filters','url':'filters'}] %}
+    {% set navigations = [{'name':'Home','url':'index'},{'name':'Filters','url':'filters'},{'name':'Tests','url':'tests'},{'name':'About','url':'about'}] %}
     {% for navigation in navigations %}
-        <a href = "{{url_for(navigation.url)}}">{{navigation.name}}</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+        {% if loop.index == loop.length %}
+            <a href = "{{url_for(navigation.url)}}">{{navigation.name}}</a>
+        {% else %}
+            <a href = "{{url_for(navigation.url)}}">{{navigation.name}}</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+        {% endif %}
     {% endfor %}
     <hr>
     {# 自定义变量二 #}
     {% set urls %}
         <li><a href = "/index">Index</a></li>
         <li><a href = "/about">About</a></li>
+        <li><a href = "/base">Base</a></li>
         <li><a href = "/watchlist">WatchList</a></li>
     {% endset %}
     <ul>

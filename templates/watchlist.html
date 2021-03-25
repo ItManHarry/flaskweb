@@ -6,7 +6,7 @@
 </head>
 <body>
     <a href = "{{url_for('index')}}">&larr;Return</a>
-    <h2>{{user.username}}</h2>
+    <h2>{{user.username}} : {{sayhello()}} - {{globaltitle|smiling}}</h2>
     {% if user.bio %}
         <i>{{user.bio}}</i>
     {% else %}

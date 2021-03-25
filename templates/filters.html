@@ -5,18 +5,22 @@
     <title>Flask Web Filters Page</title>
 </head>
 <body>
-    <h1>Flask Web Filters Page!!!</h1>
-    {% set navigations = [{'name':'Home','url':'index'},{'name':'About','url':'about'},{'name':'WatchList','url':'watchlist'},{'name':'Filters','url':'filters'}] %}
+    <h1>Flask Web Filters Page!!!{{sayhello()}} - {{globaltitle|smiling}}</h1>
+    {% set navigations = [{'name':'Home','url':'index'},{'name':'Filters','url':'filters'},{'name':'Tests','url':'tests'},{'name':'About','url':'about'}] %}
     {% for navigation in navigations %}
-        <a href = "{{url_for(navigation.url)}}">{{navigation.name}}</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+        {% if loop.index == loop.length %}
+            <a href = "{{url_for(navigation.url)}}">{{navigation.name}}</a>
+        {% else %}
+            <a href = "{{url_for(navigation.url)}}">{{navigation.name}}</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+        {% endif %}
     {% endfor %}
+    <hr>
     {#
         过滤器（filter）是一些可以用来修改和过滤变量值的特殊函数，
         过滤器和变量用一个竖线（管道符号）隔开，需要参数的过滤器
         可以像函数一样使用括号传递
         例：{{navigations|length}}等同于Python调用len(navigations)
     #}
-    <hr>
     <h2>1. Length filter : </h2><h3>&nbsp;&nbsp;&nbsp;&nbsp;Navigation size : {{navigations|length}}</h3>
     <h2>2. Title filter : </h2><h3>&nbsp;&nbsp;&nbsp;&nbsp;Title : {{'jack'|title}}</h3>
     {% set name = 'tom' %}
@@ -30,7 +34,11 @@
     <h3>&nbsp;&nbsp;&nbsp;&nbsp;Unique value :
         [
             {% for n in numlist|unique %}
-                {{n}},
+                {% if loop.index == loop.length %}
+                    {{n}}
+                {% else %}
+                    {{n}},
+                {% endif %}
             {% endfor %}
         ]
     </h3>
@@ -42,6 +50,7 @@
     {% set data = {'name':'Jack','age':25,'email':'jack@163.com'} %}
     <h2>13. JSON filter : </h2><h3>&nbsp;&nbsp;&nbsp;&nbsp;JSON value : {{data|tojson}}</h3>
     <h2>14. Truncate filter : </h2><h3>&nbsp;&nbsp;&nbsp;&nbsp;Truncated value : {{words|truncate(length=20 ,killwords=False,end='...')}}</h3>
+    <h2>15. User own filter : </h2><h3>&nbsp;&nbsp;&nbsp;&nbsp;User own filter : {{tempstr|trim|musical}}</h3>
     <h1>Upper Filter : </h1>
     {% filter upper %}
         This context will be shown in upper case.
@@ -50,5 +59,10 @@
     {# 自定义上下文值 #}
     <h2>Parameter name : {{p_name}}</h2>
     <h2>Parameter age : {{p_age}}</h2>
+    <hr>
+    <h1>Number list length is : {{numlist|length}}</h1>
+    {% for i in range(10) %}
+        <h3>Element length : {{ loop.length }}, Index is : {{ loop.index }}, Element is : {{i}}</h3>
+    {% endfor %}
 </body>
 </html>
