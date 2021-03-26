@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Flask Web About Page!!!</title>
-</head>
-<body>
+{% extends 'base.html'%}
+{%block title%}Flask Web Filter Page{%endblock%}
+{%block content%}
     <h1>Flask Web About Page!!!{{sayhello()}} - {{globaltitle|smiling}}</h1>
     {% set navigations = [{'name':'Home','url':'index'},{'name':'Filters','url':'filters'},{'name':'Tests','url':'tests'},{'name':'About','url':'about'}] %}
     {% for navigation in navigations %}
@@ -18,5 +14,5 @@
     {# 自定义上下文值 #}
     <h2>Parameter name : {{p_name}}</h2>
     <h2>Parameter age : {{p_age}}</h2>
-</body>
-</html>
+    {
+{% endblock %}

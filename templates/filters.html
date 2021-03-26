@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Flask Web Filters Page</title>
-</head>
-<body>
+{% extends 'base.html'%}
+{%block title%}Flask Web Filter Page{%endblock%}
+{%block content%}
     <h1>Flask Web Filters Page!!!{{sayhello()}} - {{globaltitle|smiling}}</h1>
     {% set navigations = [{'name':'Home','url':'index'},{'name':'Filters','url':'filters'},{'name':'Tests','url':'tests'},{'name':'About','url':'about'}] %}
     {% for navigation in navigations %}
@@ -64,5 +60,4 @@
     {% for i in range(10) %}
         <h3>Element length : {{ loop.length }}, Index is : {{ loop.index }}, Element is : {{i}}</h3>
     {% endfor %}
-</body>
-</html>
+{% endblock %}

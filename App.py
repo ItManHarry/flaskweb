@@ -16,7 +16,8 @@ def init():
 
 @app.before_request
 def reqintercepter():
-    g.name = request.args.get('name')
+    g.name = request.args.get('name', 'Harry')
+    g.index = int(request.args.get('index', '1'))
     session['user'] = g.name
     print('Intercept every request!!!')
 

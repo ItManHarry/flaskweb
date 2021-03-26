@@ -29,7 +29,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
           <a class="navbar-brand" href="#"><i class="fas fa-pepper-hot"></i>&nbsp;&nbsp;Flask Study</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -39,21 +39,21 @@
                 {% set navigations = [{'name':'Home','url':'index'},{'name':'Filters','url':'filters'},{'name':'Tests','url':'tests'},{'name':'About','url':'about'}] %}
                 {% for navigation in navigations %}
                     <li class="nav-item">
-                        {% if loop.index == 1 %}
-                            <a class = "nav-link active" href = "{{url_for(navigation.url)}}">{{navigation.name}}</a>
+                        {% if loop.index == g.index %}
+                            <a class = "nav-link active" href = "{{url_for(navigation.url,index=loop.index)}}">{{navigation.name}}</a>
                         {% else %}
-                            <a class = "nav-link" href = "{{url_for(navigation.url)}}">{{navigation.name}}</a>
+                            <a class = "nav-link" href = "{{url_for(navigation.url,index=loop.index)}}">{{navigation.name}}</a>
                         {% endif %}
                     </li>
                 {% endfor %}
             </ul>
           </div>
           <span class = "navbar-text text-right">
-              <a href = "#"><i class="fas fa-user"></i>&nbsp;&nbsp;Harry</a>
+              <a href = "#"><i class="fas fa-user"></i>&nbsp;&nbsp;{{session.get('user')}}</a>
           </span>
         </nav>
     </header>
-    <main>
+    <main style = "margin-top:50px;">
         {%block content%}{%endblock%}
     </div>
     </main>

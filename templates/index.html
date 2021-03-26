@@ -1,13 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Flask Web Index Page</title>
-</head>
-<body>
-    <h1>Flask Web Index Page!!!{{sayhello()}} - {{globaltitle|smiling}}</h1>
+{% extends 'base.html'%}
+{%block title%}Flask Web Index Page{%endblock%}
+{%block content%}
+    <h1>Flask Web Index Page!!!{{sayhello()}} - {{globaltitle|smiling}}-Index:{{g.index}}</h1>
     {#全局函数#}
-    <h3>{{get_time()}}</h3>
+    <h3>{{get_time()}} - Index:{{g.index}}</h3>
     {# banner导入 include #}
     {% include 'banner/_banner.html' %}
     {# 自定义变量一 #}
@@ -73,5 +69,4 @@
         1. url_for()
         2. get_flased_messages()
     #}
-</body>
-</html>
+{% endblock %}
