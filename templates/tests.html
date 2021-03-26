@@ -1,8 +1,9 @@
-{% extends 'base.html'%}
-{%block title%}Flask Web Test Page{%endblock%}
+{% extends 'base.html' %}
+{% block title %}Flask Web Test Page{% endblock %}
 {# 显式地使用with context声明传人当前模板的上下文 #}
 {% from 'macros/_macros.html' import qux with context %}
-{%block content%}
+{% block content %}
+<div class = "container-fluid">
     <h1>Flask Web Tests Page!!!{{sayhello()}} - {{globaltitle|smiling}}</h1>
     {% set navigations = [{'name':'Home','url':'index'},{'name':'Filters','url':'filters'},{'name':'Tests','url':'tests'},{'name':'About','url':'about'}] %}
     {% for navigation in navigations %}
@@ -59,4 +60,5 @@
     <h3>{{ qux(2) }}</h3>
     <h3>{{ qux(1) }}</h3>
     <h3>{{ qux(0) }}</h3>
+</div>
 {% endblock %}

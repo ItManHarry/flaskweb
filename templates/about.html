@@ -1,6 +1,10 @@
-{% extends 'base.html'%}
-{%block title%}Flask Web Filter Page{%endblock%}
-{%block content%}
+{% extends 'base.html' %}
+{% block title %}Flask Web About Page{% endblock %}
+{% block link %}
+    {{static_file('css','css/ztree/zTreeStyle.css')}}
+{% endblock %}
+{% block content %}
+<div class = "container-fluid">
     <h1>Flask Web About Page!!!{{sayhello()}} - {{globaltitle|smiling}}</h1>
     {% set navigations = [{'name':'Home','url':'index'},{'name':'Filters','url':'filters'},{'name':'Tests','url':'tests'},{'name':'About','url':'about'}] %}
     {% for navigation in navigations %}
@@ -14,5 +18,61 @@
     {# 自定义上下文值 #}
     <h2>Parameter name : {{p_name}}</h2>
     <h2>Parameter age : {{p_age}}</h2>
-    {
+    {%set user = {'id':1000,'name':'Tom'} %}
+    User : <span id = "user" data-id = "{{user.id}}" data-name="{{user.name}}">{{user.name}}</span>
+    <button class = "btn btn-outline-primary" onclick="selfClick()">Self Click</button>
+    <button class = "btn btn-outline-success" onclick="allAlert()">All Click</button>
+    <button class = "btn btn-outline-info" onclick="userInfo()">User Info</button>
+    <div class = "row">
+        <div class = "col">
+            Tree : <ul id = "tree" class = "ztree"></ul>
+        </div>
+    </div>
+
+</div>
 {% endblock %}
+{% block scripts %}
+    {{static_file('js','js/ztree/jquery.ztree.all.min.js')}}
+{% endblock %}
+<script>
+    {% block variable %}
+    var name = '{{p_name}}'
+    var zTreeObj = null
+    // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+    var setting = {
+        showLine: true,
+        checkable: true
+    };
+    // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
+    var zNodes = [
+      {name:"test1", open:true, children:[
+      {name:"test1_1"}, {name:"test1_2"}]},
+      {name:"test2", open:true, children:[
+      {name:"test2_1"}, {name:"test2_2"}]}
+    ];
+    {% endblock %}
+    {% block ready %}
+        $(function(){
+           alert('P_Name is : ' + name)
+           zTreeObj = $.fn.zTree.init($("#tree"), setting, zNodes);
+        })
+    {% endblock %}
+    {% block function %}
+    {#
+        如果想要向基模板中的块追加内容，需要使用Jinja2 提供的super()函数
+        进行声明，这会向父块添加内容,否则将替换父块的内容。
+    #}
+    {{ super() }}
+    function selfClick(){
+        alert('For Test')
+    }
+    function userInfo(){
+        /*
+            在JavaScript中,我们可以使用DOM元素的dataset属性获取data-* 属性值,比如element.dataset.username,
+            或是使用getAttribute()方法,比如element.getAttribute('data-username');使用jQuery时,可以直接
+            对jQuery对象调用data方法获取,比如$element.data('username')
+        */
+        alert('User info , id : ' + $('#user').data('id') + ', name : ' + $('#user').data('name'))
+    }
+    {% endblock %}
+</script>
