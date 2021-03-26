@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+{% from 'macros/_macros.html' import qux with context %}
 <head>
     <meta charset="UTF-8">
     <title>Flask Web Tests Page</title>
@@ -53,5 +54,13 @@
     {% else %}
         <h3>我不是Sam</h3>
     {% endif %}
+    <hr>
+    {% for message in get_flashed_messages() %}
+        <h3>{{message}}</h3>
+    {% endfor %}
+    <hr>
+    <h3>{{ qux(2) }}</h3>
+    <h3>{{ qux(1) }}</h3>
+    <h3>{{ qux(0) }}</h3>
 </body>
 </html>

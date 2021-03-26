@@ -339,11 +339,11 @@ def filters():
 @app.route('/tests')
 def tests():
     name = 'Jack'
+    flash('I am flash , who is looking for me ?')
     return render_template('tests.html', name=name)
 
 @app.route('/base')
 def base():
-    flash('I am flash , who is looking for me ?')
     return render_template('base.html')
 
 #启动服务

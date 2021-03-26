@@ -1,60 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 {# 显式地使用with context声明传人当前模板的上下文 #}
-{% from 'macros/_macros.html' import qux,static_file with context %}
+{% from 'macros/_macros.html' import static_file with context %}
 <head>
-    <meta charset="UTF-8">
-    <title>{%block title%}Flask Web Base Page!!!{%endblock%}</title>
-    <!--link rel = "icon" type = "image/x-icon" href="{{url_for('static', filename='images/icon/way.ico')}}"-->
-    <!--link rel = "stylesheet" type = "text/css" href = "{{url_for('static', filename = 'css/bootstrap.min.css')}}"-->
-    <!--link rel = "stylesheet" type = "text/css" href = "{{url_for('static', filename = 'css/jquery-confirm.min.css')}}"-->
-    <!--script src = "{{url_for('static', filename='js/jquery-3.3.1.min.js')}}"></script-->
-    <!--script src = "{{url_for('static', filename='js/popper.min.js')}}"></script-->
-    <!--script src = "{{url_for('static', filename='js/bootstrap.min.js')}}"></script-->
-    <!--script src = "{{url_for('static', filename='js/bootstrap-paginator.js')}}"></script-->
-    <!--script src = "{{url_for('static', filename='js/jquery-confirm.min.js')}}"></script-->
-    {# -------------------- 宏引入静态文件 -------------------- #}
-    {{static_file('icon','images/icon/way.ico')}}
-    {{static_file('css','css/bootstrap.min.css')}}
-    {{static_file('css','css/jquery-confirm.min.css')}}
-    {{static_file('js','js/jquery-3.3.1.min.jso')}}
-    {{static_file('js','js/popper.min.js')}}
-    {{static_file('js','js/bootstrap.min.js')}}
-    {{static_file('js','js/bootstrap-paginator.js')}}
-    {{static_file('js','js/jquery-confirm.min.js')}}
+    {% block head%}
+        <meta charset="UTF-8">
+        <title>{%block title%}Python Web框架Flask{%endblock%}</title>
+        <!--link rel = "icon" type = "image/x-icon" href="{{url_for('static', filename='images/icon/way.ico')}}"-->
+        <!--link rel = "stylesheet" type = "text/css" href = "{{url_for('static', filename = 'css/bootstrap.min.css')}}"-->
+        <!--link rel = "stylesheet" type = "text/css" href = "{{url_for('static', filename = 'css/jquery-confirm.min.css')}}"-->
+        <!--script src = "{{url_for('static', filename='js/jquery-3.3.1.min.js')}}"></script-->
+        <!--script src = "{{url_for('static', filename='js/popper.min.js')}}"></script-->
+        <!--script src = "{{url_for('static', filename='js/bootstrap.min.js')}}"></script-->
+        <!--script src = "{{url_for('static', filename='js/bootstrap-paginator.js')}}"></script-->
+        <!--script src = "{{url_for('static', filename='js/jquery-confirm.min.js')}}"></script-->
+        {# -------------------- 宏引入静态文件 -------------------- #}
+        {{static_file('icon','images/icon/way.ico')}}
+        {{static_file('css','css/bootstrap.min.css')}}
+        {{static_file('css','css/jquery-confirm.min.css')}}
+        {{static_file('css','css/all.min.css')}}
+        {{static_file('js','js/jquery-3.3.1.min.jso')}}
+        {{static_file('js','js/popper.min.js')}}
+        {{static_file('js','js/bootstrap.min.js')}}
+        {{static_file('js','js/bootstrap-paginator.js')}}
+        {{static_file('js','js/jquery-confirm.min.js')}}
+        {% block styles %}{% endblock %}
+    {% endblock %}
 </head>
 <body>
-    <div class = "container-fluid">
-        <div class = "row">
-            <div class = "col-sm-12">
-                {% for message in get_flashed_messages() %}
-                    <div class = "alert alert-primary">{{message}}</div>
-                {% endfor %}
-            </div>
-        </div>
-        <div class = "row">
-            <div class = "col-sm-12">
-                <h1>Flask Web Base Page!!!{{sayhello()}} - {{globaltitle|smiling}}</h1>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+          <a class="navbar-brand" href="#"><i class="fas fa-pepper-hot"></i>&nbsp;&nbsp;Flask Study</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
                 {% set navigations = [{'name':'Home','url':'index'},{'name':'Filters','url':'filters'},{'name':'Tests','url':'tests'},{'name':'About','url':'about'}] %}
                 {% for navigation in navigations %}
-                    {% if loop.index == loop.length %}
-                        <a href = "{{url_for(navigation.url)}}">{{navigation.name}}</a>
-                    {% else %}
-                        <a href = "{{url_for(navigation.url)}}">{{navigation.name}}</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                    {% endif %}
+                    <li class="nav-item">
+                        {% if loop.index == 1 %}
+                            <a class = "nav-link active" href = "{{url_for(navigation.url)}}">{{navigation.name}}</a>
+                        {% else %}
+                            <a class = "nav-link" href = "{{url_for(navigation.url)}}">{{navigation.name}}</a>
+                        {% endif %}
+                    </li>
                 {% endfor %}
-            </div>
-        </div>
-        <div class = "row">
-            <div class = "col-sm-12">
-                <h3>{{ qux(2) }}</h3>
-                <h3>{{ qux(1) }}</h3>
-                <h3>{{ qux(0) }}</h3>
-            </div>
-        </div>
-        <hr>
+            </ul>
+          </div>
+          <span class = "navbar-text text-right">
+              <a href = "#"><i class="fas fa-user"></i>&nbsp;&nbsp;Harry</a>
+          </span>
+        </nav>
+    </header>
+    <main>
         {%block content%}{%endblock%}
     </div>
+    </main>
+    <footer>
+        {% block footer %}{% endblock %}
+    </footer>
+    {% block scripts %}{% endblock %}
     <script>
         $(function(){
            /*$.alert({
