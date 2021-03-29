@@ -1,4 +1,5 @@
 from flask import Flask,request,make_response,jsonify,redirect,url_for,session,g,render_template,Markup,flash
+from forms.loginform import LoginForm
 from urllib.parse import urlparse,urljoin
 import json
 import os
@@ -256,7 +257,8 @@ def login():
 def logout():
     if 'logged_in' in session:
         session.pop('logged_in')
-    return redirect(url_for('hello'))
+    session.pop('loginuser', None)
+    return redirect(url_for('index'))
 
 #重定向回到上一个页面
 @app.route('/foo')
@@ -346,7 +348,26 @@ def tests():
 @app.route('/base')
 def base():
     return render_template('base.html')
-
+@app.route('/tologin')
+def tologin():
+    form = LoginForm()
+    return  render_template('login/login.html', form=form)
+@app.route('/signin',methods=['POST','GET'])
+def signin():
+    username = request.form.get('username').strip()
+    password = request.form.get('password').strip()
+    print('User name %s, password %s' %(username, password))
+    if not username or not password:
+        session['loginfailed'] = '账号 / 密码为空!!!'
+    else:
+        if username == 'admin' and password == '123456':
+            session.pop('loginfailed',None)
+            session['loginuser'] = username
+            return redirect(url_for('index'))
+        else:
+            session['loginfailed'] = '账号 / 密码错误!!!'
+    return redirect(url_for('tologin'))
 #启动服务
 if __name__ == '__main__':
-    app.run(port=8080,debug=True)
+    #Web服务器默认是对外不可见的，设置host参数为'0.0.0.0'使其对外可见
+    app.run(host='0.0.0.0',port=8080,debug=True)

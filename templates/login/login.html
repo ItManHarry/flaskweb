@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Flask Login Page{% endblock %}
+ {% block header %}&nbsp;{% endblock %}
+{% block content %}
+<div class = "container-fluid">
+    <div class="row">
+        <div class = "col-4 offset-4 text-center text-primary">
+            <span style = "font-size:72px;"><i class="fas fa-sign-in-alt"></i></span>
+            <h2>Please Log In</h2>
+            {% if session['loginfailed'] %}
+            <div class="alert alert-danger" role="alert">
+                {{ session['loginfailed'] }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class = "row">
+        <div class = "col-4 offset-4">
+            <form method="post" action="{{url_for('signin')}}">
+                {{form.csrf_token }}
+                <div class="form-group">
+                    {{form.username.label}}
+                    {{form.username(class='form-control',id='username')}}
+                </div>
+                <div class="form-group">
+                    {{form.password.label}}
+                    {{form.password(class='form-control',id='password')}}
+                </div>
+                <div class="form-check">
+                    {{form.remember(class='form-check-input',id='remember')}}
+                    {{form.remember.label}}
+                </div>
+                <div>
+                    {{form.submit(class='btn btn-outline-primary btn-block')}}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{%endblock%}

@@ -32,6 +32,7 @@
 </head>
 <body>
     <header>
+        {% block header %}
         <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
           <a class="navbar-brand" href="#"><i class="fas fa-pepper-hot"></i>&nbsp;&nbsp;Flask Study</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,9 +53,15 @@
             </ul>
           </div>
           <span class = "navbar-text text-right">
-              <a href = "#"><i class="fas fa-user"></i>&nbsp;&nbsp;{{session.get('user')}}</a>
+              {% if session['loginuser'] %}
+                <i class="fas fa-user"></i>&nbsp;{{session['loginuser']}}&nbsp;&nbsp;
+                <a href="{{url_for('logout')}}"><i class = "fas fa-sign-out-alt"></i></a>
+              {% else %}
+                <a href="{{url_for('tologin')}}"><i class = "fas fa-sign-in-alt"></i></a>
+              {% endif %}
           </span>
         </nav>
+        {% endblock %}
     </header>
     <main style = "margin-top:50px;">
         {# --------- 子页面实际内容 --------- #}
