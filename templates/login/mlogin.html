@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Flask Login Page(Macro Way){% endblock %}
+{% block header %}&nbsp;{% endblock %}
+{% block content %}
+<div class = "container-fluid">
+    <div class="row">
+        <div class = "col-4 offset-4 text-center text-primary">
+            <span style = "font-size:72px;"><i class="fas fa-sign-in-alt"></i></span>
+            <h2>Please Log In</h2>
+            {% if session['loginfailed'] %}
+            <div class="alert alert-danger" role="alert">
+                {{ session['loginfailed'] }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <small class = "row">
+        <small class = "col-4 offset-4">
+            <!-- 指定对应的处理请求地址 -->
+            <!--form method="post" action="{{url_for('signin')}}"-->
+            <!-- action属性为空，默认使用当前页面对应的url处理请求 -->
+            <!-- 使用宏渲染表单 -->
+            <form method="post">
+                {{form.csrf_token }}
+                {{ form_field(form.username,class='form-control') }}
+                {{ form_field(form.password,class='form-control') }}
+                {{ form_field(form.remember,class='form-check-input') }}
+                {{ form_field(form.submit,class='btn btn-outline-primary btn-block') }}
+            </form>
+        </div>
+    </div>
+</div>
+{%endblock%}

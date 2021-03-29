@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}Flask Login Page{% endblock %}
- {% block header %}&nbsp;{% endblock %}
+{% block header %}&nbsp;{% endblock %}
 {% block content %}
 <div class = "container-fluid">
     <div class="row">
@@ -14,17 +14,30 @@
             {% endif %}
         </div>
     </div>
-    <div class = "row">
-        <div class = "col-4 offset-4">
-            <form method="post" action="{{url_for('signin')}}">
+    <small class = "row">
+        <small class = "col-4 offset-4">
+            <!-- 指定对应的处理请求地址 -->
+            <!--form method="post" action="{{url_for('signin')}}"-->
+            <!-- action属性为空，默认使用当前页面对应的url处理请求 -->
+            <form method="post">
                 {{form.csrf_token }}
                 <div class="form-group">
                     {{form.username.label}}
                     {{form.username(class='form-control',id='username')}}
+                    {% for message in form.username.errors %}
+                        <small class="text-danger">
+                            {{ message }}
+                        </small>
+                    {% endfor %}
                 </div>
                 <div class="form-group">
                     {{form.password.label}}
                     {{form.password(class='form-control',id='password')}}
+                    {% for message in form.password.errors %}
+                        <small class="text-danger">
+                            {{ message }}
+                        </small>
+                    {% endfor %}
                 </div>
                 <div class="form-check">
                     {{form.remember(class='form-check-input',id='remember')}}

@@ -21,3 +21,28 @@
         <script type = "text/javascript" src = "{{file_path}}"></script>
     {% endif %}
 {% endmacro %}
+{# ---------------------- 渲染表单 ---------------------- #}
+{% macro form_field(field) %}
+    {% if field.type == 'SubmitField' %}
+        <div class="form-group">
+            {{ field(**kwargs) }}
+        </div>
+    {% elif field.type == 'BooleanField' %}
+        <div class="form-check">
+            {{ field(**kwargs) }}
+            {{ field.label }}
+        </div>
+    {% else %}
+        <div class="form-group">
+            {{ field.label }}
+            {{ field(**kwargs) }}
+            {% if field.errors %}
+                {% for message in field.errors %}
+                    <small class="text-danger">
+                        {{ message }}
+                    </small>
+                {% endfor %}
+            {% endif %}
+        </div>
+    {% endif %}
+{% endmacro %}

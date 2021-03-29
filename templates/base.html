@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {# 显式地使用with context声明传人当前模板的上下文 #}
-{% from 'macros/_macros.html' import static_file with context %}
+{% from 'macros/_macros.html' import static_file,form_field with context %}
 <head>
     {% block head%}
         <meta charset="UTF-8">

@@ -1,11 +1,13 @@
 from flask import Flask,request,make_response,jsonify,redirect,url_for,session,g,render_template,Markup,flash
-from forms.loginform import LoginForm
+from forms.forms import LoginForm
 from urllib.parse import urlparse,urljoin
 import json
 import os
 import time
 app = Flask(__name__)
+#如果要使用session，必须设置secret_key值
 app.secret_key=os.getenv('SECRET_KEY', 'secretkey0001')
+app.config['WTF_I18N_ENABLED'] = False
 #自定义错误页面
 @app.errorhandler(404)
 def page_not_found(e):
@@ -348,10 +350,37 @@ def tests():
 @app.route('/base')
 def base():
     return render_template('base.html')
-@app.route('/tologin')
-def tologin():
+@app.route('/macrologin')
+def macrologin():
     form = LoginForm()
-    return  render_template('login/login.html', form=form)
+    return render_template('login/mlogin.html', form=form)
+@app.route('/tologin', methods=['GET','POST'])
+def tologin():
+    #form = LoginForm(meta={'locales':['en_US','en']})
+    form = LoginForm()
+    print('tologin method is : ' , request.method, ', submitted ? ' , form.validate_on_submit())
+    '''
+        表单实例化后，如果是GET请求，则会渲染模板。
+        如果是POST，就调用validate()函数执行表单验证
+    '''
+    #if request.method == 'POST' and form.validate():
+    '''
+        Flask-WTF 提供的validate_on_submit()方法合并了请求方式判断及表单验证，所以以上写法可改为如下写法
+    '''
+        #pass
+    if form.validate_on_submit():
+        print('Do the post login action !!!')
+        '''
+            表单类的data属性是一个匹配所有字段与对应数据的字典，我们一般直接通过“ form.字段属性名.data ”的
+            形式来获取对应字段的数据
+        '''
+        if form.username.data == 'admin' and form.password.data == '12345678':
+            session.pop('loginfailed',None)
+            session['loginuser'] = form.username.data
+            return redirect(url_for('index'))
+        else:
+            session['loginfailed'] = '账号 / 密码错误!!!'
+    return render_template('login/login.html', form=form)
 @app.route('/signin',methods=['POST','GET'])
 def signin():
     username = request.form.get('username').strip()
