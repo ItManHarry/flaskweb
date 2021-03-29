@@ -350,6 +350,7 @@ def tests():
 @app.route('/base')
 def base():
     return render_template('base.html')
+#使用宏渲染表单
 @app.route('/macrologin')
 def macrologin():
     form = LoginForm()
