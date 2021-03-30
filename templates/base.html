@@ -40,7 +40,7 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-                {% set navigations = [{'name':'Home','url':'index'},{'name':'Filters','url':'filters'},{'name':'Tests','url':'tests'},{'name':'About','url':'about'}] %}
+                {% set navigations = [{'name':'Home','url':'index'},{'name':'Filters','url':'filters'},{'name':'Tests','url':'tests'},{'name':'Upload','url':'fileupload'},{'name':'About','url':'about'}] %}
                 {% for navigation in navigations %}
                     <li class="nav-item">
                         {% if loop.index == g.index %}
@@ -63,7 +63,7 @@
         </nav>
         {% endblock %}
     </header>
-    <main style = "margin-top:50px;">
+    <main style = "margin-top:60px;">
         {# --------- 子页面实际内容 --------- #}
         {% block content %}{% endblock %}
     </div>

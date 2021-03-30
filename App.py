@@ -1,13 +1,20 @@
-from flask import Flask,request,make_response,jsonify,redirect,url_for,session,g,render_template,Markup,flash
-from forms.forms import LoginForm
+from flask import Flask,request,make_response,jsonify,redirect,url_for,session,g,render_template,Markup,flash,send_from_directory
+from forms.forms import LoginForm,SingleFileForm
 from urllib.parse import urlparse,urljoin
+from werkzeug.utils import secure_filename
 import json
 import os
 import time
+import uuid
 app = Flask(__name__)
 #如果要使用session，必须设置secret_key值
 app.secret_key=os.getenv('SECRET_KEY', 'secretkey0001')
+#停用WTF国际化
 app.config['WTF_I18N_ENABLED'] = False
+#设置文件上传大小(单位为字节)
+app.config['MAX_CONTENT_LENGTH'] = 3 * 1024 * 1024 * 1024
+#配置文件上传路径
+app.config['UPLOAD_PATH']=os.path.join(app.root_path, 'uploads')
 #自定义错误页面
 @app.errorhandler(404)
 def page_not_found(e):
@@ -397,6 +404,42 @@ def signin():
         else:
             session['loginfailed'] = '账号 / 密码错误!!!'
     return redirect(url_for('tologin'))
+@app.route('/fileupload')
+def fileupload():
+    form = SingleFileForm()
+    print('Upload method is : ', request.method , ', submitted ? ' , form.validate_on_submit(), ', form validated ?' , form.validate())
+    '''
+     if form.validate_on_submit():
+        print('Do the file upload action ...')
+        f = form.photo.data
+        filename = random_filename(f.filename)
+        print('File name : ', filename)
+        f.save(os.path.join(app.config['UPLOAD_PATH'], filename))
+        flash('文件上传成功!')
+        session['filenames'] = [filename]
+        return redirect(url_for('uploaded'))
+    '''
+    #return redirect(url_for('upload_file'))
+    return render_template('files/upload.html',form=form)
+def random_filename(filename):
+    ext = os.path.splitext(filename)[1]
+    newfilename = uuid.uuid4().hex + ext
+    return newfilename
+@app.route('/files/<path:filename>')
+def get_file(filename):
+    return send_from_directory(app.config['UPLOAD_PATH'], filename)
+@app.route('/doupload', methods=['POST'])
+def doupload():
+    f = request.files['photo']
+    filename = random_filename(f.filename)
+    print('File name : ', filename)
+    f.save(os.path.join(app.config['UPLOAD_PATH'], filename))
+    flash('文件上传成功!')
+    session['filenames'] = [filename]
+    return redirect(url_for('fileupload'))
+@app.route('/uploaded')
+def uploaded():
+    return render_template('files/uploaded.html')
 #启动服务
 if __name__ == '__main__':
     #Web服务器默认是对外不可见的，设置host参数为'0.0.0.0'使其对外可见

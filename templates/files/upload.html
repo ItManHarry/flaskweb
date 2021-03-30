@@ -1,0 +1,43 @@
+{%extends 'base.html'%}
+{%block title%}The File Upload Page{%endblock%}
+{%block content%}
+<div class = "container-fluid">
+    <div class="row">
+      <div class="col">
+          <h4>单个文件上传</h4>
+      </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <form method="post" enctype="multipart/form-data" action="{{url_for('doupload')}}">
+              <div class="form-group">
+                  {{form.photo.label}}
+                  {{form.photo(class='form-control-file',accept='.jpg,.jpeg,.png,.gif')}}
+                  {% for message in form.photo.errors %}
+                    <small class="text-danger">
+                        {{ message }}
+                    </small>
+                  {% endfor %}
+              </div>
+              <div class="form-group">
+                  {{form.submit(class='btn btn-primary')}}
+              </div>
+            </form>
+        </div>
+    </div>
+    {%if session['filenames']%}
+        {%for file in session['filenames']%}
+            <div class="row">
+                <div class="col-4">
+                    File:<a href="{{url_for('get_file',filename=file)}}" target="_blank">{{file}}</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <img src="{{url_for('get_file', filename=file)}}" class="rounded">
+                </div>
+            </div>
+        {%endfor%}
+    {%endif%}
+</div>
+{%endblock%}
