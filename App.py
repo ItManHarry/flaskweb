@@ -1,5 +1,5 @@
 from flask import Flask,request,make_response,jsonify,redirect,url_for,session,g,render_template,Markup,flash,send_from_directory
-from forms.forms import LoginForm,SingleFileForm
+from forms.forms import LoginForm,SingleFileForm,MultipleFileForm
 from urllib.parse import urlparse,urljoin
 from werkzeug.utils import secure_filename
 import json
@@ -406,7 +406,12 @@ def signin():
     return redirect(url_for('tologin'))
 @app.route('/fileupload')
 def fileupload():
+    print('uuid hex :\t', uuid.uuid4().hex)
+    print('uuid int :\t', uuid.uuid4().int)
+    print('uuid time :\t', uuid.uuid4().time)
+    print('uuid bytes :\t', uuid.uuid4().bytes)
     form = SingleFileForm()
+    mform = MultipleFileForm()
     print('Upload method is : ', request.method , ', submitted ? ' , form.validate_on_submit(), ', form validated ?' , form.validate())
     '''
      if form.validate_on_submit():
@@ -420,7 +425,7 @@ def fileupload():
         return redirect(url_for('uploaded'))
     '''
     #return redirect(url_for('upload_file'))
-    return render_template('files/upload.html',form=form)
+    return render_template('files/upload.html',form=form,mform=mform,index=session['index'])
 def random_filename(filename):
     ext = os.path.splitext(filename)[1]
     newfilename = uuid.uuid4().hex + ext
@@ -430,13 +435,26 @@ def get_file(filename):
     return send_from_directory(app.config['UPLOAD_PATH'], filename)
 @app.route('/doupload', methods=['POST'])
 def doupload():
+    fullpath = request.referrer
+    print('Index is >>>>>>>>>>>>>>>>>>>>> : ', fullpath[-1])
     f = request.files['photo']
     filename = random_filename(f.filename)
     print('File name : ', filename)
     f.save(os.path.join(app.config['UPLOAD_PATH'], filename))
     flash('文件上传成功!')
     session['filenames'] = [filename]
-    return redirect(url_for('fileupload'))
+    return redirect(url_for('fileupload', index=request.referrer[-1]))
+@app.route('/mupload', methods=['POST'])
+def mupload():
+    uploadedfiles = []
+    for f in request.files.getlist('photos'):
+        filename = random_filename(f.filename)
+        print('File name : ', filename)
+        f.save(os.path.join(app.config['UPLOAD_PATH'], filename))
+        uploadedfiles.append(filename)
+    flash('文件上传成功!')
+    session['uploadedfiles'] = uploadedfiles
+    return redirect(url_for('fileupload', index=request.referrer[-1]))
 @app.route('/uploaded')
 def uploaded():
     return render_template('files/uploaded.html')
