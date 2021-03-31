@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField,BooleanField,PasswordField,SubmitField,MultipleFileField
+from wtforms import StringField,BooleanField,PasswordField,SubmitField,MultipleFileField,DateField
 from flask_wtf.file import FileField,FileRequired,FileAllowed
 from wtforms.validators import DataRequired, Length,InputRequired
 from wtforms.validators import ValidationError
@@ -55,10 +55,17 @@ class LoginForm(BaseForm):
 class SingleFileForm(BaseForm):
     photo = FileField('Upload Image',validators=[FileRequired(),FileAllowed(['jpg','jpeg','png','gif'])])
     submit = SubmitField('Upload')
+'''
+    多个文件上传表单
+'''
 class MultipleFileForm(BaseForm):
     photos = MultipleFileField('Upload Images',validators=[DataRequired()])
     submit = SubmitField('Upload')
+'''
+    富文本表单
+'''
 class RichEditorForm(BaseForm):
-    title = StringField('Title',validators=[DataRequired(),Length(1,50)])
-    body = CKEditorField('Body', validators=[DataRequired()])
+    title = StringField('标题',validators=[DataRequired(),InputRequired('请输入标题！！！'),Length(10,50,'标题必须满足10-50个字符!!!')])
+    body = CKEditorField('内容', validators=[DataRequired()])
+    time = DateField('日期', validators=[DataRequired(),InputRequired('请输入发布日期！！！')])
     submit = SubmitField('Publish')

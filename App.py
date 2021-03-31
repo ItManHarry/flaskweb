@@ -466,9 +466,15 @@ def mupload():
 @app.route('/uploaded')
 def uploaded():
     return render_template('files/uploaded.html')
-@app.route('/richeditor')
+@app.route('/richeditor', methods=['GET','POST'])
 def richeditor():
     form = RichEditorForm()
+    form.body.data = '<h1>Init content !</h1>'
+    #form.time.data = '2021-03-30'
+    if form.validate_on_submit():
+        print('Do the post action .....................')
+        print('Title is : ', form.title.data)
+        print('Body is : ', form.body.data)
     return render_template('editor/richeditor.html', form=form)
 #启动服务
 if __name__ == '__main__':

@@ -17,11 +17,15 @@
                 <div class="form-group">
                     {{form.title.label}}
                     {{form.title(class='form-control')}}<br>
-                    {% for message in form.title.errors %}
-                        <small class="text-danger">
-                            {{ message }}
-                        </small>
-                    {% endfor %}
+                    {% if form.title.errors %}
+                        {% for message in form.title.errors %}
+                            <small class="text-danger">
+                                {{ message }}
+                            </small>
+                        {% endfor %}<br>
+                    {% endif %}
+                    {{form.time.label}}
+                    {{form.time(class='form-control')}}<br>
                     {{form.body.label}}
                     {{form.body(class='ckeditor')}}<br>
                     {{ form.submit(class='btn btn-outline-primary') }}
