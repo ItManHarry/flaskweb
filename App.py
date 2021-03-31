@@ -3,12 +3,14 @@ from forms.forms import LoginForm,SingleFileForm,MultipleFileForm,RichEditorForm
 from urllib.parse import urlparse,urljoin
 from werkzeug.utils import secure_filename
 from flask_ckeditor import CKEditor
+from db.tables import init_db
 import json
 import os
 import time
 import uuid
 app = Flask(__name__)
-ckeditor = CKEditor(app)
+#初始化数据库
+init_db()
 #如果要使用session，必须设置secret_key值
 app.secret_key=os.getenv('SECRET_KEY', 'secretkey0001')
 #停用WTF国际化
@@ -19,6 +21,7 @@ app.config['MAX_CONTENT_LENGTH'] = 3 * 1024 * 1024 * 1024
 app.config['UPLOAD_PATH']=os.path.join(app.root_path, 'uploads')
 #自定义错误页面
 app.config['CKEDITOR_SERVE_LOCAL'] = True
+ckeditor = CKEditor(app)
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('errors/404.html'), 404
