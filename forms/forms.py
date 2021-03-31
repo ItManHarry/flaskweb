@@ -3,6 +3,7 @@ from wtforms import StringField,BooleanField,PasswordField,SubmitField,MultipleF
 from flask_wtf.file import FileField,FileRequired,FileAllowed
 from wtforms.validators import DataRequired, Length,InputRequired
 from wtforms.validators import ValidationError
+from flask_ckeditor import CKEditorField
 '''
     全局验证器
 '''
@@ -57,3 +58,7 @@ class SingleFileForm(BaseForm):
 class MultipleFileForm(BaseForm):
     photos = MultipleFileField('Upload Images',validators=[DataRequired()])
     submit = SubmitField('Upload')
+class RichEditorForm(BaseForm):
+    title = StringField('Title',validators=[DataRequired(),Length(1,50)])
+    body = CKEditorField('Body', validators=[DataRequired()])
+    submit = SubmitField('Publish')

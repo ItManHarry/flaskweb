@@ -26,6 +26,8 @@
         {{static_file('js','js/bootstrap.min.js')}}
         {{static_file('js','js/bootstrap-paginator.js')}}
         {{static_file('js','js/jquery-confirm.min.js')}}
+        {# --------- 引入子页面自己的JavaScript文件 --------- #}
+        {% block scripts %}{% endblock %}
         {# --------- 编写子页面自己的css样式 --------- #}
         {% block styles %}{% endblock %}
     {% endblock %}
@@ -40,7 +42,14 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-                {% set navigations = [{'name':'Home','url':'index'},{'name':'Filters','url':'filters'},{'name':'Tests','url':'tests'},{'name':'Upload','url':'fileupload'},{'name':'About','url':'about'}] %}
+                {% set navigations = [
+                    {'name':'Home','url':'index'},
+                    {'name':'Filters','url':'filters'},
+                    {'name':'Tests','url':'tests'},
+                    {'name':'Upload','url':'fileupload'},
+                    {'name':'Editor','url':'richeditor'},
+                    {'name':'About','url':'about'}]
+                %}
                 {% for navigation in navigations %}
                     <li class="nav-item">
                         {% if loop.index == g.index %}
@@ -72,8 +81,6 @@
         {# --------- 子页面foot内容 --------- #}
         {% block footer %}{% endblock %}
     </footer>
-    {# --------- 引入子页面自己的JavaScript文件 --------- #}
-    {% block scripts %}{% endblock %}
     <script>
         $(function(){
             //alert('base is ready')

@@ -3,6 +3,9 @@
 {% block link %}
     {{static_file('css','css/ztree/zTreeStyle.css')}}
 {% endblock %}
+{% block scripts %}
+    {{static_file('js','js/ztree/jquery.ztree.all.min.js')}}
+{% endblock %}
 {% block content %}
 <div class = "container-fluid">
     <h1>Flask Web About Page!!!{{sayhello()}} - {{globaltitle|smiling}}</h1>
@@ -30,9 +33,6 @@
     </div>
 
 </div>
-{% endblock %}
-{% block scripts %}
-    {{static_file('js','js/ztree/jquery.ztree.all.min.js')}}
 {% endblock %}
 <script>
     {% block variable %}

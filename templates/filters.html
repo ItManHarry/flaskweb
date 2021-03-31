@@ -11,6 +11,7 @@
             <a href = "{{url_for(navigation.url)}}">{{navigation.name}}</a>&nbsp;&nbsp;|&nbsp;&nbsp;
         {% endif %}
     {% endfor %}
+    {{ get_time() }}
     <hr>
     {#
         过滤器（filter）是一些可以用来修改和过滤变量值的特殊函数，

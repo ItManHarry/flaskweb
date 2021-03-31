@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Flask Rich Editor Page{% endblock %}
+{% block scripts %}
+    {{ static_file('js','ckeditor/ckeditor.js') }}
+{% endblock %}
+{% block content %}
+<div class = "container-fluid">
+    <div class="row">
+        <div class = "col">
+            <h1>Flask Rich Editor</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <form method="post">
+                {{form.csrf_token }}
+                <div class="form-group">
+                    {{form.title.label}}
+                    {{form.title(class='form-control')}}<br>
+                    {% for message in form.title.errors %}
+                        <small class="text-danger">
+                            {{ message }}
+                        </small>
+                    {% endfor %}
+                    {{form.body.label}}
+                    {{form.body(class='ckeditor')}}<br>
+                    {{ form.submit(class='btn btn-outline-primary') }}
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--div class="row">
+        <div class="col">
+            <div class="form-group">
+                <textarea name="editor1" id="editor1" class="ckeditor" rows="10" cols="80"></textarea>
+            </div>
+        </div>
+    </--div>
+    <div-- class="row">
+        <div class = "col">
+            <div class="form-group">
+                {{ form.submit(class='btn btn-outline-primary') }}
+            </div>
+        </div>
+    </div-->
+</div>
+{%endblock%}
+
+<script>
+{% block ready %}
+    {{ get_ckeditor() }}
+{% endblock %}
+</script>>

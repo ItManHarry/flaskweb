@@ -1,12 +1,14 @@
 from flask import Flask,request,make_response,jsonify,redirect,url_for,session,g,render_template,Markup,flash,send_from_directory
-from forms.forms import LoginForm,SingleFileForm,MultipleFileForm
+from forms.forms import LoginForm,SingleFileForm,MultipleFileForm,RichEditorForm
 from urllib.parse import urlparse,urljoin
 from werkzeug.utils import secure_filename
+from flask_ckeditor import CKEditor
 import json
 import os
 import time
 import uuid
 app = Flask(__name__)
+ckeditor = CKEditor(app)
 #如果要使用session，必须设置secret_key值
 app.secret_key=os.getenv('SECRET_KEY', 'secretkey0001')
 #停用WTF国际化
@@ -16,6 +18,7 @@ app.config['MAX_CONTENT_LENGTH'] = 3 * 1024 * 1024 * 1024
 #配置文件上传路径
 app.config['UPLOAD_PATH']=os.path.join(app.root_path, 'uploads')
 #自定义错误页面
+app.config['CKEDITOR_SERVE_LOCAL'] = True
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('errors/404.html'), 404
@@ -29,6 +32,7 @@ def reqintercepter():
     g.name = request.args.get('name', 'Harry')
     g.index = int(request.args.get('index', '1'))
     session['user'] = g.name
+    session['index'] = request.args.get('index', '1')
     print('Intercept every request!!!')
 
 #自定义上下文
@@ -41,6 +45,9 @@ def inject_params():
 @app.template_global()
 def get_time():
     return 'Now is : %s, Time Zone is : %s' %(time.strftime('%Y年%m月%d日 %H时%M分%S秒'), time.tzname)
+@app.template_global()
+def get_ckeditor():
+    return ckeditor
 
 #自定义过滤器
 @app.template_filter()
@@ -64,6 +71,7 @@ def sayhello():
 globaltitle = 'Global Title'
 app.jinja_env.globals['sayhello'] = sayhello
 app.jinja_env.globals['globaltitle'] = globaltitle
+app.jinja_env.globals['ckeditor'] = ckeditor
 #添加过滤器
 def smiling(s):
     return s + '  :)'
@@ -458,6 +466,10 @@ def mupload():
 @app.route('/uploaded')
 def uploaded():
     return render_template('files/uploaded.html')
+@app.route('/richeditor')
+def richeditor():
+    form = RichEditorForm()
+    return render_template('editor/richeditor.html', form=form)
 #启动服务
 if __name__ == '__main__':
     #Web服务器默认是对外不可见的，设置host参数为'0.0.0.0'使其对外可见
