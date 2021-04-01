@@ -3,12 +3,29 @@ from forms.forms import LoginForm,SingleFileForm,MultipleFileForm,RichEditorForm
 from urllib.parse import urlparse,urljoin
 from werkzeug.utils import secure_filename
 from flask_ckeditor import CKEditor
-from db.tables import init_db
+from flask_sqlalchemy import SQLAlchemy
 import json
 import os
 import time
 import uuid
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLITE_DATABASE_URL', 'sqlite:///'+os.path.join(app.root_path, 'data.db'))
+app.config ['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+db = SQLAlchemy(app)
+'''
+    默认情况下， Flask-SQLAlchemy会根据模型类的名称生成一个表名称，生成规则如下：
+    Message --> message ＃单个单词转换为小写
+    FooBar  --> foo_bar ＃多个单词转换为小写并使用下划线分隔
+'''
+class Note(db.Model):
+    id = db.Column(db.String, primary_key=True)
+    title=db.Column(db.String)
+    body= db.Column(db.Text)
+    def __repr__(self):
+        return '<Note %r>' %self.body
+
+def init_db():
+    db.create_all()
 #初始化数据库
 init_db()
 #如果要使用session，必须设置secret_key值
@@ -472,12 +489,19 @@ def uploaded():
 @app.route('/richeditor', methods=['GET','POST'])
 def richeditor():
     form = RichEditorForm()
-    form.body.data = '<h1>Init content !</h1>'
+    if request.method == 'GET':
+        form.title.data = ''
+        form.body.data = ''
+    #form.body.data = '<h1>Init content !</h1>'
     #form.time.data = '2021-03-30'
     if form.validate_on_submit():
         print('Do the post action .....................')
         print('Title is : ', form.title.data)
         print('Body is : ', form.body.data)
+        note = Note(id=uuid.uuid4().hex,title=form.title.data,body=form.body.data)
+        db.session.add(note)
+        db.session.commit()
+        flash('数据已保存!!!')
     return render_template('editor/richeditor.html', form=form)
 #启动服务
 if __name__ == '__main__':

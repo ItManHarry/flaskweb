@@ -10,6 +10,17 @@
             <h1>Flask Rich Editor</h1>
         </div>
     </div>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="row">
+                    <div class="col">
+                        <div class="alert alert-primary" role="alert">{{message}}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
     <div class="row">
         <div class="col">
             <form method="post">
@@ -49,7 +60,6 @@
     </div-->
 </div>
 {%endblock%}
-
 <script>
 {% block ready %}
     {{ get_ckeditor() }}
