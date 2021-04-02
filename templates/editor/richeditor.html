@@ -4,64 +4,54 @@
     {{ static_file('js','ckeditor/ckeditor.js') }}
 {% endblock %}
 {% block content %}
-<div class = "container-fluid">
+<div class = "container-fluid" style="padding-top:10px;">
+    <div class="row">
+        <div class = "col text-right">
+            <a href="{{url_for('notes',index=g.index)}}" class="btn btn-outline-success"><i class="fas fa-list"></i>&nbsp;&nbsp;已发布</a>
+        </div>
+    </div><br>
     <div class="row">
         <div class = "col">
-            <h1>Flask Rich Editor</h1>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="row">
+                            <div class="col">
+                                <div class="alert alert-primary" role="alert">{{message}}</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
         </div>
     </div>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                <div class="row">
-                    <div class="col">
-                        <div class="alert alert-primary" role="alert">{{message}}</div>
-                    </div>
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
     <div class="row">
         <div class="col">
             <form method="post">
                 {{form.csrf_token }}
                 <div class="form-group">
                     {{form.title.label}}
-                    {{form.title(class='form-control')}}<br>
+                    {{form.title(class='form-control')}}
                     {% if form.title.errors %}
                         {% for message in form.title.errors %}
                             <small class="text-danger">
                                 {{ message }}
                             </small>
-                        {% endfor %}<br>
+                        {% endfor %}
                     {% endif %}
-                    {{form.time.label}}
-                    {{form.time(class='form-control')}}<br>
-                    {{form.body.label}}
-                    {{form.body(class='ckeditor')}}<br>
-                    {{ form.submit(class='btn btn-outline-primary') }}
                 </div>
+                <div class="form-group">
+                    {{form.body.label}}
+                    {{form.body(class='ckeditor')}}
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-outline-primary" type="submit"><i class="fas fa-cloud-upload-alt"></i>&nbsp;&nbsp;发布</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href = "{{url_for('notes', index=g.index)}}" class="btn btn-outline-secondary"><i class="fas fa-ban"></i>&nbsp;&nbsp;取消</a>
+                </div>
+                <input type = "hidden" name = "action" value="{{request.args.get('action')}}">
+                <input type = "hidden" name = "id" value = "{{request.args.get('id')}}">
             </form>
         </div>
     </div>
-    <!--div class="row">
-        <div class="col">
-            <div class="form-group">
-                <textarea name="editor1" id="editor1" class="ckeditor" rows="10" cols="80"></textarea>
-            </div>
-        </div>
-    </--div>
-    <div-- class="row">
-        <div class = "col">
-            <div class="form-group">
-                {{ form.submit(class='btn btn-outline-primary') }}
-            </div>
-        </div>
-    </div-->
 </div>
 {%endblock%}
-<script>
-{% block ready %}
-    {{ get_ckeditor() }}
-{% endblock %}
-</script>>

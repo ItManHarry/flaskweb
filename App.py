@@ -488,22 +488,44 @@ def uploaded():
     return render_template('files/uploaded.html')
 @app.route('/richeditor', methods=['GET','POST'])
 def richeditor():
+    action = request.args.get('action', 'N')
+    print('The action is : ', action)
     form = RichEditorForm()
-    if request.method == 'GET':
-        form.title.data = ''
-        form.body.data = ''
+    if request.method == 'GET' and action == 'U':
+        note = Note.query.get(request.args.get('id'))
+        form.title.data = note.title
+        form.body.data = note.body
     #form.body.data = '<h1>Init content !</h1>'
     #form.time.data = '2021-03-30'
     if form.validate_on_submit():
         print('Do the post action .....................')
         print('Title is : ', form.title.data)
         print('Body is : ', form.body.data)
-        note = Note(id=uuid.uuid4().hex,title=form.title.data,body=form.body.data)
-        db.session.add(note)
-        db.session.commit()
+        action = request.form['action']
+        print('Post action is : ', action)
+        if action == 'N':   #新增
+            note = Note(id=uuid.uuid4().hex,title=form.title.data,body=form.body.data)
+            db.session.add(note)
+            db.session.commit()
+        else:               #修改
+            note = Note.query.get(request.form['id'])
+            note.title = form.title.data
+            note.body = form.body.data
+            db.session.commit()
         flash('数据已保存!!!')
     return render_template('editor/richeditor.html', form=form)
+@app.route('/notes')
+def notes():
+    notelist = Note.query.all()
+    print('note size is : ', len(notelist))
+    return render_template('editor/notes.html', notelist=notelist)
+@app.route('/delnote')
+def delnote():
+    note = Note.query.get(request.args.get('id'))
+    db.session.delete(note)
+    db.session.commit()
+    return redirect(url_for('notes',index=request.args.get('index')))
 #启动服务
 if __name__ == '__main__':
     #Web服务器默认是对外不可见的，设置host参数为'0.0.0.0'使其对外可见
-    app.run(host='0.0.0.0',port=8080,debug=True)
+    app.run(host='0.0.0.0',port=80,debug=True)

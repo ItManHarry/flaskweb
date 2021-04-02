@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Flask Note List Page{% endblock %}
+{% block content %}
+<div class = "container-fluid" style="padding-top:10px;">
+    <div class="row">
+        <div class = "col text-right">
+            <a href="{{url_for('richeditor',index=g.index,action='N')}}" class="btn btn-outline-primary"><i class="fas fa-plus"></i>&nbsp;&nbsp;新增</a>
+        </div>
+    </div><br>
+    <div class="row">
+        <div class="col">
+            <table class="table table-bordered table-hover table-sm">
+                <caption>List of Notes</caption>
+                <thead class="thead-light">
+                    <tr class="text-center">
+                      <th scope="col" width="10%">#</th>
+                      <th scope="col" width="70%">标题</th>
+                      <th scope="col" width="20%">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for note in notelist %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td>{{note.title}}</td>
+                        <td class="text-center">
+                            <a href="{{url_for('richeditor',index=g.index,action='U',id=note.id)}}" class="btn btn-outline-info btn-sm"><i class="fas fa-edit"></i>&nbsp;更新</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="{{url_for('delnote',index=g.index,id=note.id)}}" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash-alt"></i>&nbsp;删除</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{%endblock%}

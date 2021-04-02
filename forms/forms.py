@@ -65,7 +65,7 @@ class MultipleFileForm(BaseForm):
     富文本表单
 '''
 class RichEditorForm(BaseForm):
-    title = StringField('标题',validators=[DataRequired(),InputRequired('请输入标题！！！'),Length(10,50,'标题必须满足10-50个字符!!!')])
+    title = StringField('标题',validators=[DataRequired(),InputRequired('请输入标题！！！'),Length(5,50,'标题必须满足5-50个字符!!!')])
     body = CKEditorField('内容', validators=[DataRequired()])
-    time = DateField('日期', validators=[DataRequired(),InputRequired('请输入发布日期！！！')])
-    submit = SubmitField('Publish')
+    #time = DateField('日期', validators=[DataRequired(),InputRequired('请输入发布日期！！！')])
+    submit = SubmitField('发布')
