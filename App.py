@@ -4,6 +4,7 @@ from urllib.parse import urlparse,urljoin
 from werkzeug.utils import secure_filename
 from flask_ckeditor import CKEditor
 from flask_sqlalchemy import SQLAlchemy
+from flask_mail import Mail,Message
 import json
 import os
 import time
@@ -28,6 +29,12 @@ def init_db():
     db.create_all()
 #初始化数据库
 init_db()
+#邮箱
+app.config.update(
+    MAIL_SERVER = 'krrelay.corp.doosan.com',
+    MAIL_DEFAULT_SENDER = ('Notice of system', 'notice_cn@doosan.com')
+)
+mail = Mail(app)
 #如果要使用session，必须设置secret_key值
 app.secret_key=os.getenv('SECRET_KEY', 'secretkey0001')
 #停用WTF国际化
@@ -512,6 +519,9 @@ def richeditor():
             note.title = form.title.data
             note.body = form.body.data
             db.session.commit()
+        #发送邮件
+        message = Message(subject=form.title.data,recipients=['ChengGuoqian<guoqian.cheng@doosan.com>'],html=form.body.data)
+        mail.send(message)
         flash('数据已保存!!!')
     return render_template('editor/richeditor.html', form=form)
 @app.route('/notes')
