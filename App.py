@@ -285,7 +285,7 @@ def setcookie(name):
     return response
 
 '''
-    session 指用户会话（ us巳r session ）， 又称为对话（ dialogue), 即
+    session 指用户会话（ usr session ）， 又称为对话（ dialogue), 即
     服务器和客户揣/浏览器之间或桌面程序和用户之间建立的交互活动。
     在Flask 中， session 对象用来加密Cookie 。
     默认情况下，它会把数据存储在浏览器上一个名为session 的cookie 里
